@@ -6,7 +6,7 @@ services:
     runtime: python
     plan: free
     buildCommand: pip install -r backend/requirements.txt && python backend/manage.py collectstatic --no-input
-    startCommand: python backend/manage.py migrate --noinput && gunicorn --chdir backend config.wsgi:application --bind 0.0.0.0:$PORT
+    startCommand: python backend/manage.py migrate --noinput && (python backend/manage.py createsuperuser --noinput || true) && gunicorn --chdir backend config.wsgi:application --bind 0.0.0.0:$PORT
     healthCheckPath: /api/health/
     envVars:
       - key: DJANGO_DEBUG
@@ -17,6 +17,12 @@ services:
         value: lertrix.com,www.lertrix.com
       - key: DJANGO_CSRF_TRUSTED_ORIGINS
         value: https://lertrix.com,https://www.lertrix.com
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false
+      - key: DJANGO_SUPERUSER_EMAIL
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false
       - key: EMAIL_HOST
         value: email-ssl.com.br
       - key: EMAIL_PORT

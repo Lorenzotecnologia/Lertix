@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% block content %}
+    <main id="conteudo" class="page-tabs">
+      <section class="page-panel is-active" id="pagina-inicio" data-page-panel="inicio">
+        <div class="hero" id="inicio">
+          <div class="hero__copy">
+            <p class="eyebrow"><span></span> LERTRIX EDIÇÕES</p>
+            <h1>Literatura viva que conecta <em>continentes e histórias.</em></h1>
+            <p class="hero__description">
+              Conheça os títulos autobiográficos e históricos de {{ author }} em
+              português, espanhol e inglês.
+            </p>
+            <a class="button button--light" href="{% url 'storefront' %}#catalogo" data-page-tab="catalogo">
+              Conhecer o catálogo <span aria-hidden="true">↗</span>
+            </a>
+            <div class="hero__note">
+              <span class="hero__note-icon" aria-hidden="true">✳</span>
+              <span>Memórias que atravessam fronteiras.<br>Histórias para guardar.</span>
+            </div>
+          </div>
+
+          <div class="hero-art" aria-label="Prévias conceituais dos livros do catálogo">
+            <div class="hero-art__orbit hero-art__orbit--one"></div>
+            <div class="hero-art__orbit hero-art__orbit--two"></div>
+            <div class="hero-art__spark hero-art__spark--one" aria-hidden="true">✳</div>
+            <div class="hero-art__spark hero-art__spark--two" aria-hidden="true">✳</div>
+            {% for book in books %}
+              <div class="hero-book hero-book--{{ book.cover_style }}{% if book.cover %} hero-book--official{% endif %}">
+                {% if book.cover %}
+                  <img class="book-cover-image" src="{{ book.cover.url }}" alt="Capa de {{ book.title }}">
+                {% else %}
+                  <div class="book-cover book-cover--{{ book.cover_style }}" role="img" aria-label="Prévia conceitual, sem capa oficial, de {{ book.title }}">
+                    <span class="book-cover__edition">LERTRIX EDIÇÕES</span>
+                    <span class="book-cover__title">{{ book.title }}</span>
+                    <span class="book-cover__author">{{ author }}</span>
+                    <span class="book-cover__seal" aria-hidden="true">L.</span>
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+            <p class="hero-art__caption">EDIÇÕES EM PORTUGUÊS · ESPANHOL · INGLÊS</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="page-panel" id="pagina-catalogo" data-page-panel="catalogo">
+      <section class="catalog section-wrap" id="catalogo">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow eyebrow--dark"><span></span> CATÁLOGO EDITORIAL</p>
+            <h2>Livros de {{ author }}.</h2>
+          </div>
+          <p class="section-heading__aside">
+            Edições físicas com histórias de memória, imigração e cultura.
+          </p>
+        </div>
+
+        <div class="book-grid">
+          {% for book in books %}
+            <article class="book-card">
+              <div class="book-card__art book-card__art--{{ book.cover_style }}">
+                <span class="book-card__number">0{{ forloop.counter }}</span>
+                {% if book.cover %}
+                  <img class="book-cover-image" src="{{ book.cover.url }}" alt="Capa de {{ book.title }}">
+                {% else %}
+                  <div class="book-cover book-cover--{{ book.cover_style }}" role="img" aria-label="Prévia conceitual, sem capa oficial, de {{ book.title }}">
+                    <span class="book-cover__edition">LERTRIX EDIÇÕES</span>
+                    <span class="book-cover__title">{{ book.title }}</span>
+                    <span class="book-cover__author">{{ book.author }}</span>
+                    <span class="book-cover__seal" aria-hidden="true">L.</span>
+                  </div>
+                  <span class="book-card__preview">PRÉVIA CONCEITUAL</span>
+                {% endif %}
+              </div>
+              <div class="book-card__info">
+                <div>
+                  <p class="book-card__label">LIVRO · {{ author }}</p>
+                  <h3><a href="{% url 'book-detail' book.slug %}">{{ book.title }}</a></h3>
+                  {% if book.price %}
+                    <p class="book-card__price">R$ {{ book.price|floatformat:2 }}</p>
+                  {% else %}
+                    <p class="book-card__price book-card__price--pending">Preço a confirmar</p>
+                  {% endif %}
+                </div>
+                <a href="{% url 'book-detail' book.slug %}" class="book-card__link" aria-label="Mais informações sobre {{ book.title }}">
+                  <span aria-hidden="true">↗</span>
+                </a>
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+        <!-- Inserir aqui as capas oficiais, sinopses, preços e links de compra quando forem definidos. -->
+        <p class="catalog__note">Capas e informações do catálogo são atualizadas pela equipe Lertrix.</p>
+      </section>
+      </section>
+
+      <section class="page-panel" id="pagina-sobre" data-page-panel="sobre">
+        <section class="about section-wrap" id="sobre">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow eyebrow--dark"><span></span> SOBRE A EDITORA</p>
+              <h1>A essência da palavra.</h1>
+            </div>
+            <p class="section-heading__aside">Preservando a memória através do livro impresso.</p>
+          </div>
+          <div class="about__copy">
+            <p>
+              A <strong>Lertrix Edições</strong> é uma editora independente dedicada a
+              preservar e promover a riqueza literária ibero-americana, com edições
+              em português, espanhol e inglês.
+            </p>
+            <p>
+              Acreditamos que histórias de vida verídicas merecem tratamento de
+              arte: projetos gráficos acolhedores, traduções fiéis e distribuição
+              ágil para o leitor contemporâneo.
+            </p>
+          </div>
+          <div class="about__actions">
+            <a class="button button--light" href="{% url 'storefront' %}#catalogo" data-page-tab="catalogo">
+              Ver Catálogo de Livros <span aria-hidden="true">↗</span>
+            </a>
+            <a class="button button--outline" href="{% url 'storefront' %}#contato" data-page-tab="contato">
+              Falar Conosco
+            </a>
+          </div>
+        </section>
+      </section>
+
+      <section class="page-panel" id="pagina-contato" data-page-panel="contato">
+        <section class="contact section-wrap" id="contato">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow eyebrow--dark"><span></span> CANAL DIRETO</p>
+              <h1>Fale com a Lertrix.</h1>
+            </div>
+            <p class="section-heading__aside">
+              Tire dúvidas sobre os livros de {{ author }} ou parcerias editoriais.
+            </p>
+          </div>
+          <div class="contact__card">
+            <div>
+              <p class="contact__label">E-mail de contato</p>
+              <a class="contact__email" href="mailto:contato@lertrixedicoes.com.br">
+                contato@lertrixedicoes.com.br
+              </a>
+            </div>
+            <div>
+              <p class="contact__label">Redes sociais</p>
+              <p class="contact__value">@lertrixedicoes</p>
+            </div>
+            <div>
+              <p class="contact__label">Suporte a pedidos</p>
+              <p class="contact__value">Segunda a sexta, das 9h às 18h (horário de Brasília)</p>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+{% endblock %}

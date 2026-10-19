@@ -82,7 +82,7 @@ valores que o Render informar.
 
 A loja inclui formulário de contato (`/contato/`), carrinho (`/carrinho/`),
 pedidos sem pagamento online (`/pedido/`, gerenciados no admin) e API JSON do
-catálogo (`/api/livros/`). O frete é calculado por tabela própria (UF do CEP × faixa de peso), editável em Admin → Tarifas de frete; frete grátis a partir de R$ 62,00 (`FREE_SHIPPING_MIN`). O domínio `www.lertrix.com`, o SMTP da Locaweb e a
+catálogo (`/api/livros/`). O frete é calculado por tabela própria (UF do CEP × faixa de peso), editável em Admin → Tarifas de frete; não há frete grátis por padrão (defina `FREE_SHIPPING_MIN` para ativar). O domínio `www.lertrix.com`, o SMTP da Locaweb e a
 migração do site antigo estão descritos em `docs/locaweb-dominio.md`.
 
 ## Estrutura

@@ -184,8 +184,8 @@ PIX_RECEIVER_NAME = os.environ.get(
 )
 PIX_RECEIVER_CITY = os.environ.get("PIX_RECEIVER_CITY", "Barueri")
 
-# Frete: CEP de origem (Barueri/SP), mínimo para frete grátis e peso padrão por livro.
+# Frete: CEP de origem (Barueri/SP), mínimo para frete grátis (vazio = sem frete grátis) e peso padrão por livro.
 SHIPPING_ORIGIN_CEP = os.environ.get("SHIPPING_ORIGIN_CEP", "06455-010")
-_free_min = os.environ.get("FREE_SHIPPING_MIN", "62.00").replace(",", ".")
+_free_min = os.environ.get("FREE_SHIPPING_MIN", "").replace(",", ".")
 FREE_SHIPPING_MIN = Decimal(_free_min) if _free_min else None
 DEFAULT_BOOK_WEIGHT_GRAMS = int(os.environ.get("DEFAULT_BOOK_WEIGHT_GRAMS", "500"))

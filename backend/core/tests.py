@@ -191,7 +191,8 @@ class CartAndOrderTests(TestCase):
         response = self.client.post(reverse("checkout"), self.checkout_data)
         self.assertRedirects(response, reverse("order-done"))
         order = Order.objects.get()
-        self.assertEqual(order.total, 126)  # CEP 01001-000, frete grátis
+        self.assertEqual(order.items.get().quantity, 2)
+        self.assertEqual(order.total, 126 + order.shipping_cost)
         self.assertEqual(order.state, "SP")
         self.assertEqual(order.items.get().quantity, 2)
         self.assertContains(self.client.get(reverse("order-done")), f"#{order.pk}")
@@ -244,7 +245,7 @@ class PixTests(TestCase):
         response = client.get(reverse("order-done"))
         self.assertContains(response, "000201")
         self.assertContains(response, "<svg")
-        self.assertContains(response, "grátis")
+        self.assertContains(response, "Total com frete")
 
 
 class ShippingTests(TestCase):
@@ -258,18 +259,27 @@ class ShippingTests(TestCase):
         self.assertEqual(cep_to_state("69010-000"), "AM")
         self.assertEqual(cep_to_state("123"), "")
 
-    def test_free_shipping_above_minimum(self):
+    def test_no_free_shipping_by_default(self):
         self.client.post(reverse("cart-add", args=[self.slug]))
         self.client.post(reverse("shipping-calc"), {"cep": "40010-000"})
-        self.assertContains(self.client.get(reverse("cart")), "grátis")
+        response = self.client.get(reverse("cart"))
+        self.assertContains(response, "Nordeste")
+        self.assertNotContains(response, "grátis")
+
+    def test_free_shipping_when_minimum_configured(self):
+        from decimal import Decimal
+
+        self.client.post(reverse("cart-add", args=[self.slug]))
+        self.client.post(reverse("shipping-calc"), {"cep": "40010-000"})
+        with self.settings(FREE_SHIPPING_MIN=Decimal("62")):
+            self.assertContains(self.client.get(reverse("cart")), "grátis")
 
     def test_paid_shipping_below_minimum(self):
         from decimal import Decimal
 
         self.client.post(reverse("cart-add", args=[self.slug]))
         self.client.post(reverse("shipping-calc"), {"cep": "40010-000"})
-        with self.settings(FREE_SHIPPING_MIN=Decimal("500")):
-            response = self.client.get(reverse("cart"))
+        response = self.client.get(reverse("cart"))
         self.assertContains(response, "Nordeste")
         self.assertNotContains(response, "grátis")
 
@@ -280,8 +290,7 @@ class ShippingTests(TestCase):
 
         self.client.post(reverse("cart-add", args=[self.slug]))
         data = {**CartAndOrderTests.checkout_data, "postal_code": "40010-000", "state": "BA"}
-        with self.settings(FREE_SHIPPING_MIN=Decimal("500")):
-            self.client.post(reverse("checkout"), data)
+        self.client.post(reverse("checkout"), data)
         order = Order.objects.get()
         self.assertEqual(order.total, order.shipping_cost + 63)
         self.assertGreater(order.shipping_cost, 0)

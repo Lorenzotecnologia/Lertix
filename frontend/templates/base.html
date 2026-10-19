@@ -1,0 +1,84 @@
+{% load static %}
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{ meta_description }}">
+    <meta name="theme-color" content="#2058a8">
+    <title>{{ page_title }}</title>
+    <link rel="stylesheet" href="{% static 'css/storefront.css' %}">
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+
+    <div class="announcement">
+      <span>LERTRIX EDIÇÕES</span>
+      <p>Uma livraria de autor, feita para boas histórias.</p>
+      <span class="announcement__mark" aria-hidden="true">✳</span>
+    </div>
+
+    <header class="site-header">
+      <a
+        class="brand"
+        href="{% url 'storefront' %}#inicio"
+        aria-label="Lertrix Edições — início"
+        {% if current_page == "storefront" %}data-page-tab="inicio"{% endif %}
+      >
+        <img
+          class="brand__logo"
+          src="{% static 'images/lertrix-logo.png' %}"
+          alt="Lertrix"
+        >
+        <span class="brand__descriptor">EDIÇÕES</span>
+      </a>
+      <nav
+        class="main-nav"
+        aria-label="Navegação principal"
+        {% if current_page == "storefront" %}data-page-tablist{% endif %}
+      >
+        <a
+          id="tab-inicio"
+          href="{% url 'storefront' %}#inicio"
+          {% if current_page == "storefront" %}data-page-tab="inicio"{% endif %}
+        >Início</a>
+        <a
+          id="tab-catalogo"
+          href="{% url 'storefront' %}#catalogo"
+          {% if current_page == "storefront" %}data-page-tab="catalogo"{% elif current_page == "book" %}aria-current="page"{% endif %}
+        >Catálogo</a>
+        <a
+          id="tab-sobre"
+          href="{% url 'storefront' %}#sobre"
+          {% if current_page == "storefront" %}data-page-tab="sobre"{% endif %}
+        >Sobre a Editora</a>
+        <a
+          id="tab-contato"
+          href="{% url 'storefront' %}#contato"
+          {% if current_page == "storefront" %}data-page-tab="contato"{% endif %}
+        >Contato</a>
+      </nav>
+      <a class="header-link" href="{% url 'cart' %}">
+        Carrinho{% if cart_count %} ({{ cart_count }}){% endif %}
+      </a>
+    </header>
+
+    {% block content %}{% endblock %}
+    <div class="page-curtain" aria-hidden="true"></div>
+
+    <footer class="site-footer">
+      <p>Livros de Antonio Dalama Lorenzo</p>
+      <a
+        href="{% url 'storefront' %}#inicio"
+        class="back-to-top"
+        {% if current_page == "storefront" %}data-page-tab="inicio"{% endif %}
+      >Voltar ao início ↑</a>
+    </footer>
+    {% if whatsapp_url %}
+      <a class="whatsapp-float" href="{{ whatsapp_url }}" target="_blank" rel="noopener" aria-label="Conversar no WhatsApp">
+        {% include "partials/whatsapp_icon.html" %}
+      </a>
+    {% endif %}
+    <script src="{% static 'js/page-tabs.js' %}" defer></script>
+  </body>
+</html>

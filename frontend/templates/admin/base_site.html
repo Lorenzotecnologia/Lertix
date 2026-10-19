@@ -1,0 +1,22 @@
+{% extends "admin/base.html" %}
+{% load static i18n %}
+
+{% block title %}
+  {{ title }} | {{ site_title|default:_("Administração Lertrix") }}
+{% endblock %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/admin-brand.css' %}">
+{% endblock %}
+
+{% block branding %}
+  <h1 id="site-name">
+    <a href="{% url 'admin:index' %}" class="admin-brand">
+      <img src="{% static 'images/lertrix-logo.png' %}" alt="Lertrix">
+      <span>{{ site_header|default:_("Lertrix Edições") }}</span>
+    </a>
+  </h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

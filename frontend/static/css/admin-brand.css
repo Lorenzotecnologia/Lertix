@@ -1,0 +1,155 @@
+#site-name .admin-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+#site-name .admin-brand img {
+  display: block;
+  width: 118px;
+  height: auto;
+  padding: 0.25rem 0.4rem;
+  border-radius: 3px;
+  background: #fff;
+}
+
+#site-name .admin-brand span {
+  color: inherit;
+}
+
+.dashboard #content {
+  max-width: 1180px;
+}
+
+.owner-dashboard {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.owner-dashboard__welcome {
+  padding: 2rem;
+  border-radius: 0.75rem;
+  color: #fff;
+  background: linear-gradient(125deg, #173f7c, #2058a8);
+}
+
+.owner-dashboard__eyebrow {
+  margin: 0 0 0.65rem;
+  color: #f0c0c8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.owner-dashboard__welcome h1 {
+  margin: 0 0 0.5rem;
+  color: #fff;
+  font-size: clamp(1.65rem, 4vw, 2.35rem);
+}
+
+.owner-dashboard__welcome > p:not(.owner-dashboard__eyebrow) {
+  max-width: 38rem;
+  margin: 0;
+  color: #e2efec;
+  font-size: 1rem;
+}
+
+.owner-dashboard__primary-action {
+  display: inline-flex;
+  gap: 0.65rem;
+  align-items: center;
+  margin-top: 1.25rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.35rem;
+  color: #173f7c;
+  background: #f0c0c8;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.owner-dashboard__primary-action:hover {
+  background: #f6dce1;
+}
+
+.owner-dashboard__primary-action:focus-visible,
+.owner-dashboard__shortcut-list a:focus-visible {
+  outline: 3px solid #f0c0c8;
+  outline-offset: 3px;
+}
+
+.owner-dashboard__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.owner-dashboard__stat {
+  display: grid;
+  gap: 0.3rem;
+  padding: 1.2rem;
+  border: 1px solid var(--hairline-color, #d8d8d8);
+  border-radius: 0.5rem;
+  background: var(--body-bg, #fff);
+}
+
+.owner-dashboard__stat-value {
+  color: #2058a8;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.owner-dashboard__stat-label {
+  color: var(--body-quiet-color, #666);
+  font-size: 0.9rem;
+}
+
+.owner-dashboard__shortcuts,
+.owner-dashboard__management {
+  margin-top: 1.5rem;
+}
+
+.owner-dashboard__shortcuts h2,
+.owner-dashboard__management h2 {
+  margin: 0 0 0.75rem;
+  color: var(--body-fg, #222);
+  font-size: 1.15rem;
+}
+
+.owner-dashboard__shortcut-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.owner-dashboard__shortcut-list a {
+  display: inline-flex;
+  gap: 0.75rem;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--hairline-color, #d8d8d8);
+  border-radius: 0.35rem;
+  background: var(--body-bg, #fff);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.owner-dashboard__management .module {
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 700px) {
+  .owner-dashboard__welcome {
+    padding: 1.4rem;
+  }
+
+  .owner-dashboard__stats {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .owner-dashboard__stat {
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    gap: 0.75rem;
+  }
+}

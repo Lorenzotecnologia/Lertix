@@ -1,0 +1,57 @@
+{% extends "admin/base_site.html" %}
+
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+
+{% block content %}
+  <div id="content-main">
+    <section class="owner-dashboard" aria-labelledby="dashboard-title">
+      <div class="owner-dashboard__welcome">
+        <p class="owner-dashboard__eyebrow">PAINEL DA LOJA</p>
+        <h1 id="dashboard-title">Olá, {{ user.get_full_name|default:user.username }}.</h1>
+        <p>Gerencie o catálogo e acompanhe o que está visível na vitrine Lertrix.</p>
+        {% if perms.core.add_book %}
+          <a class="owner-dashboard__primary-action" href="{% url 'admin:core_book_add' %}">
+            Cadastrar livro <span aria-hidden="true">↗</span>
+          </a>
+        {% endif %}
+      </div>
+
+      <div class="owner-dashboard__stats" aria-label="Resumo do catálogo">
+        <article class="owner-dashboard__stat">
+          <span class="owner-dashboard__stat-value">{{ total_books }}</span>
+          <span class="owner-dashboard__stat-label">Livros cadastrados</span>
+        </article>
+        <article class="owner-dashboard__stat">
+          <span class="owner-dashboard__stat-value">{{ published_books }}</span>
+          <span class="owner-dashboard__stat-label">Visíveis na vitrine</span>
+        </article>
+        <article class="owner-dashboard__stat">
+          <span class="owner-dashboard__stat-value">{{ draft_books }}</span>
+          <span class="owner-dashboard__stat-label">Ainda não publicados</span>
+        </article>
+      </div>
+
+      <section class="owner-dashboard__shortcuts" aria-labelledby="shortcuts-title">
+        <h2 id="shortcuts-title">Acesso rápido</h2>
+        <div class="owner-dashboard__shortcut-list">
+          {% if perms.core.view_book or perms.core.change_book or perms.core.add_book %}
+            <a href="{% url 'admin:core_book_changelist' %}">
+              Gerenciar catálogo <span aria-hidden="true">→</span>
+            </a>
+          {% endif %}
+          <a href="{% url 'storefront' %}" target="_blank" rel="noopener">
+            Ver vitrine pública <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </section>
+    </section>
+
+    {% if app_list %}
+      <section class="owner-dashboard__management" aria-labelledby="management-title">
+        <h2 id="management-title">Gerenciamento</h2>
+        {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+      </section>
+    {% endif %}
+  </div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+    <main id="conteudo" class="book-detail section-wrap">
+      <nav class="breadcrumbs" aria-label="Navegação estrutural">
+        <a href="{% url 'storefront' %}">Início</a>
+        <span aria-hidden="true">/</span>
+        <a href="{% url 'storefront' %}#catalogo">Catálogo</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{{ book.title }}</span>
+      </nav>
+
+      <section class="book-detail__main">
+        <div class="book-detail__art book-card__art--{{ book.cover_style }}">
+          {% if book.cover %}
+            <img class="book-detail__cover" src="{{ book.cover.url }}" alt="Capa de {{ book.title }}">
+          {% else %}
+            <div class="book-cover book-cover--{{ book.cover_style }}" role="img" aria-label="Prévia conceitual, sem capa oficial, de {{ book.title }}">
+              <span class="book-cover__edition">LERTRIX EDIÇÕES</span>
+              <span class="book-cover__title">{{ book.title }}</span>
+              <span class="book-cover__author">{{ book.author }}</span>
+              <span class="book-cover__seal" aria-hidden="true">L.</span>
+            </div>
+            <span class="book-card__preview">PRÉVIA CONCEITUAL</span>
+          {% endif %}
+        </div>
+        <div class="book-detail__summary">
+          <p class="eyebrow eyebrow--dark"><span></span> LIVRO · {{ book.author|upper }}</p>
+          <h1>{{ book.title }}</h1>
+          <p class="book-detail__author">por {{ book.author }}</p>
+          {% if book.price %}
+            <p class="book-detail__price">R$ {{ book.price|floatformat:2 }}</p>
+          {% else %}
+            <p class="book-detail__price book-detail__price--pending">Preço a confirmar</p>
+          {% endif %}
+          {% if book.book_format %}
+            <p class="book-detail__format">{{ book.book_format }}</p>
+          {% endif %}
+          {% if book.price %}
+            <form method="post" action="{% url 'cart-add' book.slug %}">
+              {% csrf_token %}
+              <button class="button" type="submit">Adicionar ao carrinho</button>
+            </form>
+          {% else %}
+            <p class="book-detail__availability">Informações de compra em breve.</p>
+          {% endif %}
+          {% if book_whatsapp_url %}
+            <p><a class="button button--whatsapp" href="{{ book_whatsapp_url }}" target="_blank" rel="noopener">{% include "partials/whatsapp_icon.html" %}Perguntar pelo WhatsApp</a></p>
+          {% endif %}
+        </div>
+      </section>
+
+      {% if book.description %}
+        <section class="book-detail__section">
+          <p class="eyebrow eyebrow--dark"><span></span> SOBRE O LIVRO</p>
+          <div class="book-detail__prose">{{ book.description|linebreaks }}</div>
+        </section>
+      {% endif %}
+
+      {% if book.author_bio %}
+        <section class="book-detail__section book-detail__author">
+          <p class="eyebrow eyebrow--dark"><span></span> SOBRE O AUTOR</p>
+          <div class="book-detail__prose">{{ book.author_bio|linebreaks }}</div>
+        </section>
+      {% endif %}
+
+      <section class="book-detail__section" aria-labelledby="product-details-title">
+        <p class="eyebrow eyebrow--dark"><span></span> FICHA TÉCNICA</p>
+        <h2 id="product-details-title">Detalhes do produto</h2>
+        <dl class="product-facts">
+          {% if book.publisher %}<div><dt>Editora</dt><dd>{{ book.publisher }}</dd></div>{% endif %}
+          {% if book.publication_date %}<div><dt>Publicação</dt><dd>{{ book.publication_date|date:"d/m/Y" }}</dd></div>{% endif %}
+          {% if book.edition %}<div><dt>Edição</dt><dd>{{ book.edition }}</dd></div>{% endif %}
+          {% if book.language %}<div><dt>Idioma</dt><dd>{{ book.language }}</dd></div>{% endif %}
+          {% if book.page_count %}<div><dt>Páginas</dt><dd>{{ book.page_count }}</dd></div>{% endif %}
+          {% if book.isbn_10 %}<div><dt>ISBN-10</dt><dd>{{ book.isbn_10 }}</dd></div>{% endif %}
+          {% if book.isbn_13 %}<div><dt>ISBN-13</dt><dd>{{ book.isbn_13 }}</dd></div>{% endif %}
+          {% if book.weight_grams %}<div><dt>Peso</dt><dd>{{ book.weight_grams }} g</dd></div>{% endif %}
+          {% if book.dimensions %}<div><dt>Dimensões</dt><dd>{{ book.dimensions }}</dd></div>{% endif %}
+          {% if book.minimum_reading_age %}<div><dt>Idade de leitura</dt><dd>{{ book.minimum_reading_age }} anos ou mais</dd></div>{% endif %}
+        </dl>
+      </section>
+    </main>
+{% endblock %}

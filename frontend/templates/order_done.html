@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+    <main id="conteudo" class="shop-page section-wrap">
+      <h1>Pedido #{{ order.pk }} recebido</h1>
+      <p>Obrigado, {{ order.customer_name }}! Para concluir, pague por Pix.{% if order.shipping_cost is None %} O frete é a combinar: falaremos com você em {{ order.customer_email }} ou pelo WhatsApp.{% endif %}</p>
+      <ul>
+        {% for item in order.items.all %}<li>{{ item }} — R$ {{ item.subtotal|floatformat:2 }}</li>{% endfor %}
+      </ul>
+      <p class="cart-total">Total: <strong>R$ {{ order.total|floatformat:2 }}</strong></p>
+      <section class="pix-box" aria-labelledby="pix-title">
+        <h2 id="pix-title">Pagar com Pix</h2>
+        <div class="pix-box__qr" role="img" aria-label="QR Code do Pix">{{ pix_qr|safe }}</div>
+        {% if order.shipping_cost is None %}
+          <p>Valor dos produtos: <strong>R$ {{ order.total|floatformat:2 }}</strong> (sem frete)</p>
+        {% else %}
+          <p>Total com frete ({% if order.shipping_cost == 0 %}grátis{% else %}R$ {{ order.shipping_cost|floatformat:2 }}{% endif %}, {{ order.shipping_days }} dias úteis): <strong>R$ {{ order.total|floatformat:2 }}</strong></p>
+        {% endif %}
+        <label for="pix-code">Pix copia e cola</label>
+        <textarea id="pix-code" readonly rows="4">{{ pix_code }}</textarea>
+        <button class="button button--outline" type="button" id="pix-copy">Copiar código Pix</button>
+        <p class="pix-box__note">Recebedor: Rotatek Tecnologia de Impressão Ltda — CNPJ 51.835.078/0002-48. Após pagar, envie o comprovante pelo WhatsApp.</p>
+      </section>
+      <script>
+        document.getElementById("pix-copy").addEventListener("click", function () {
+          var field = document.getElementById("pix-code");
+          field.select();
+          (navigator.clipboard ? navigator.clipboard.writeText(field.value) : Promise.resolve(document.execCommand("copy")))
+            .then(function () { document.getElementById("pix-copy").textContent = "Código copiado!"; });
+        });
+      </script>
+      {% if order_whatsapp_url %}
+        <p><a class="button button--whatsapp" href="{{ order_whatsapp_url }}" target="_blank" rel="noopener">{% include "partials/whatsapp_icon.html" %}Enviar comprovante pelo WhatsApp</a></p>
+      {% endif %}
+      <a class="button" href="{% url 'storefront' %}">Voltar à loja</a>
+    </main>
+{% endblock %}

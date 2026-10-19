@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+    <main id="conteudo" class="shop-page section-wrap">
+      <h1>Carrinho</h1>
+      {% if lines %}
+        <table class="cart-table">
+          <thead><tr><th>Livro</th><th>Preço</th><th>Qtd.</th><th>Subtotal</th><th></th></tr></thead>
+          <tbody>
+            {% for line in lines %}
+              <tr>
+                <td><a href="{% url 'book-detail' line.book.slug %}">{{ line.book.title }}</a></td>
+                <td>R$ {{ line.book.price|floatformat:2 }}</td>
+                <td>
+                  <form method="post" action="{% url 'cart-update' line.book.pk %}">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" value="{{ line.quantity }}" min="0" max="20" aria-label="Quantidade">
+                    <button class="button button--outline" type="submit">Atualizar</button>
+                  </form>
+                </td>
+                <td>R$ {{ line.subtotal|floatformat:2 }}</td>
+                <td>
+                  <form method="post" action="{% url 'cart-remove' line.book.pk %}">
+                    {% csrf_token %}
+                    <button class="button button--outline" type="submit">Remover</button>
+                  </form>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <form class="form-card" method="post" action="{% url 'shipping-calc' %}">
+          {% csrf_token %}
+          <div class="form-field">
+            <label for="cep">Calcular frete — CEP de entrega</label>
+            <input id="cep" name="cep" value="{{ cep }}" inputmode="numeric" maxlength="9" placeholder="00000-000">
+          </div>
+          <button class="button button--outline" type="submit">Calcular frete</button>
+        </form>
+        {% if cep_invalid %}
+          <p class="errorlist">CEP inválido. Confira o número ou combinaremos o frete com você.</p>
+        {% elif freight %}
+          <p>
+            Frete para {{ freight.state }} ({{ freight.region }}):
+            {% if freight.free %}<strong>grátis</strong>{% else %}<strong>R$ {{ freight.price|floatformat:2 }}</strong>{% endif %}
+            — prazo estimado de {{ freight.days }} dias úteis.
+          </p>
+        {% elif cep %}
+          <p>Não temos tabela para este CEP/peso: o frete será combinado com você.</p>
+        {% endif %}
+        <p>Produtos: R$ {{ total|floatformat:2 }}</p>
+        <p class="cart-total">Total{% if freight %} com frete{% endif %}: <strong>R$ {{ freight_total|floatformat:2 }}</strong></p>
+        <a class="button" href="{% url 'checkout' %}">Finalizar pedido</a>
+      {% else %}
+        <p>Seu carrinho está vazio.</p>
+        <a class="button" href="{% url 'storefront' %}#catalogo">Ver catálogo</a>
+      {% endif %}
+    </main>
+{% endblock %}

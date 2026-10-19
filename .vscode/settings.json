@@ -1,0 +1,16 @@
+{
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/backend"
+  ],
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true,
+    "**/node_modules": true
+  },
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "git.enableSmartCommit": false,
+  "git.confirmSync": true,
+  "python.defaultInterpreterPath": "./venv/bin/python",
+  "python-envs.defaultEnvManager": "ms-python.python:system"
+}

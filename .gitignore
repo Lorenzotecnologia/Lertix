@@ -1,0 +1,24 @@
+# Dependências e ambientes virtuais
+node_modules/
+venv/
+.venv/
+__pycache__/
+
+# Variáveis de ambiente e segredos
+.env
+.env.local
+.env.*.local
+
+# Arquivos do sistema e do editor
+.DS_Store
+Thumbs.db
+*.log
+
+# Backups, temporários e artefatos locais
+*.bak
+tmp/
+*.sqlite3
+staticfiles/
+.pytest_cache/
+.coverage
+htmlcov/

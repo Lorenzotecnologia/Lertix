@@ -58,7 +58,7 @@ arquivos `.env`.
 
 ## Publicação no Render
 
-O arquivo `render.yaml` configura o deploy do Django no Render com PostgreSQL,
+O arquivo `render.yaml` (plano gratuito, para testes; `render.paid.yaml` é a versão de produção) configura o deploy do Django no Render com PostgreSQL,
 arquivos estáticos servidos pelo WhiteNoise e um disco persistente para as capas
 enviadas pelo painel administrativo. A configuração usa os planos pagos Starter
 para a aplicação e Basic para o banco.

@@ -35,8 +35,26 @@ class BookCatalogTests(TestCase):
         self.assertContains(response, "R$ 63,00")
         self.assertContains(response, "650062498X")
         self.assertContains(response, "Capa comum")
+        self.assertContains(response, "/static/images/marcia-de-antonio.")
+        self.assertContains(
+            response,
+            "Letrix Edições. Copyright ® 2024 Todos os direitos reservados.",
+        )
         self.assertContains(response, "images/lertrix-logo.", count=1)
         self.assertContains(response, 'aria-current="page"')
+
+    def test_barcelona_book_uses_the_supplied_cover(self):
+        book = Book.objects.get(slug="barcelona-e-eu")
+        book.cover = "books/covers/old-barcelona-cover.jpg"
+        book.save(update_fields=["cover"])
+
+        response = self.client.get(
+            reverse("book-detail", kwargs={"slug": book.slug})
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "/static/images/barcelona-e-eu.")
+        self.assertNotContains(response, "old-barcelona-cover.jpg")
 
     def test_unpublished_books_are_not_accessible(self):
         book = Book.objects.get(slug="barcelona-e-eu")
@@ -58,13 +76,25 @@ class StorefrontTests(TestCase):
         self.assertTemplateUsed(response, "index.html")
         self.assertContains(response, "Marcia de Antonio")
         self.assertContains(response, "Barcelona e EU!")
+        self.assertContains(response, 'class="hero__copy"')
         self.assertContains(response, "Antonio Dalama Lorenzo")
-        self.assertContains(response, "PRÉVIA CONCEITUAL")
         self.assertContains(response, "images/lertrix-logo.", count=1)
+        self.assertContains(
+            response,
+            "Letrix Edições. Copyright ® 2024 Todos os direitos reservados.",
+        )
+        self.assertContains(response, 'alt="Logo Lorenzo Tecnologia, Engenharia e Software"')
+        self.assertContains(response, "/static/images/marcia-de-antonio.", count=2)
+        self.assertContains(response, "/static/images/barcelona-e-eu.", count=2)
         self.assertContains(response, ">Início</a>")
         self.assertContains(response, ">Catálogo</a>")
         self.assertContains(response, ">Sobre a Editora</a>")
         self.assertContains(response, ">Contato</a>")
+        self.assertContains(
+            response,
+            'href="https://www.instagram.com/lertrixedicoes/"',
+        )
+        self.assertContains(response, 'class="instagram-icon"')
         self.assertNotContains(response, ">Tecnologia</a>")
         for page in ("inicio", "catalogo", "sobre", "contato"):
             self.assertContains(response, f'data-page-panel="{page}"')
@@ -141,6 +171,33 @@ class ApiTests(TestCase):
         response = self.client.get(reverse("api-book-detail", args=["nao-existe"]))
         self.assertEqual(response.status_code, 404)
 
+    def test_barcelona_api_uses_the_supplied_cover(self):
+        book = Book.objects.get(slug="barcelona-e-eu")
+        book.cover = "books/covers/old-barcelona-cover.jpg"
+        book.save(update_fields=["cover"])
+
+        response = self.client.get(reverse("api-book-detail", args=[book.slug]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            "http://testserver/static/images/barcelona-e-eu.",
+            response.json()["cover"],
+        )
+
+    def test_marcia_api_uses_the_supplied_cover(self):
+        response = self.client.get(
+            reverse(
+                "api-book-detail",
+                args=["marcia-de-antonio-memorias-de-uma-historia-de-amor"],
+            )
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            "http://testserver/static/images/marcia-de-antonio.",
+            response.json()["cover"],
+        )
+
 
 class ContactTests(TestCase):
     def test_contact_saves_and_sends_email(self):
@@ -187,6 +244,18 @@ class CartAndOrderTests(TestCase):
         self.client.post(reverse("cart-add", args=[self.slug]))
         self.client.post(reverse("cart-add", args=[self.slug]))
         self.assertContains(self.client.get(reverse("cart")), "R$ 126,00")
+        self.assertContains(
+            self.client.get(reverse("cart")),
+            "/static/images/marcia-de-antonio.",
+        )
+        self.assertContains(
+            self.client.get(reverse("checkout")),
+            "/static/images/marcia-de-antonio.",
+        )
+        self.assertContains(
+            self.client.get(reverse("checkout")),
+            "Letrix Edições. Copyright ® 2024 Todos os direitos reservados.",
+        )
 
         response = self.client.post(reverse("checkout"), self.checkout_data)
         self.assertRedirects(response, reverse("order-done"))
@@ -195,7 +264,13 @@ class CartAndOrderTests(TestCase):
         self.assertEqual(order.total, 126 + order.shipping_cost)
         self.assertEqual(order.state, "SP")
         self.assertEqual(order.items.get().quantity, 2)
-        self.assertContains(self.client.get(reverse("order-done")), f"#{order.pk}")
+        order_response = self.client.get(reverse("order-done"))
+        self.assertContains(order_response, f"#{order.pk}")
+        self.assertContains(order_response, "/static/images/marcia-de-antonio.")
+        self.assertContains(
+            order_response,
+            "Letrix Edições. Copyright ® 2024 Todos os direitos reservados.",
+        )
         self.assertRedirects(self.client.get(reverse("checkout")), reverse("cart"))
 
     def test_empty_cart_checkout_redirects(self):

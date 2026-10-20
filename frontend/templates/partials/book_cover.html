@@ -1,0 +1,8 @@
+{% load static %}
+{% if book.cover_style == "marcia" %}
+  <img class="{{ image_class }}" src="{% static 'images/marcia-de-antonio.png' %}" alt="Capa de {{ book.title }}">
+{% elif book.cover_style == "barcelona" %}
+  <img class="{{ image_class }}" src="{% static 'images/barcelona-e-eu.jpg' %}" alt="Capa de {{ book.title }}">
+{% elif book.cover %}
+  <img class="{{ image_class }}" src="{{ book.cover.url }}" alt="Capa de {{ book.title }}">
+{% endif %}

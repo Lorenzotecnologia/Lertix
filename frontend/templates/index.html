@@ -20,26 +20,16 @@
             </div>
           </div>
 
-          <div class="hero-art" aria-label="Prévias conceituais dos livros do catálogo">
-            <div class="hero-art__orbit hero-art__orbit--one"></div>
-            <div class="hero-art__orbit hero-art__orbit--two"></div>
-            <div class="hero-art__spark hero-art__spark--one" aria-hidden="true">✳</div>
-            <div class="hero-art__spark hero-art__spark--two" aria-hidden="true">✳</div>
-            {% for book in books %}
-              <div class="hero-book hero-book--{{ book.cover_style }}{% if book.cover %} hero-book--official{% endif %}">
-                {% if book.cover %}
-                  <img class="book-cover-image" src="{{ book.cover.url }}" alt="Capa de {{ book.title }}">
-                {% else %}
-                  <div class="book-cover book-cover--{{ book.cover_style }}" role="img" aria-label="Prévia conceitual, sem capa oficial, de {{ book.title }}">
-                    <span class="book-cover__edition">LERTRIX EDIÇÕES</span>
-                    <span class="book-cover__title">{{ book.title }}</span>
-                    <span class="book-cover__author">{{ author }}</span>
-                    <span class="book-cover__seal" aria-hidden="true">L.</span>
+          <div class="hero-art" aria-label="Capas dos livros do catálogo">
+            <div class="hero-art__books">
+              {% for book in books %}
+                {% if book.cover_style == "marcia" or book.cover_style == "barcelona" or book.cover %}
+                  <div class="hero-book hero-book--{{ book.cover_style }}">
+                    {% include "partials/book_cover.html" with book=book image_class="book-cover-image" %}
                   </div>
                 {% endif %}
-              </div>
-            {% endfor %}
-            <p class="hero-art__caption">EDIÇÕES EM PORTUGUÊS · ESPANHOL · INGLÊS</p>
+              {% endfor %}
+            </div>
           </div>
         </div>
       </section>
@@ -61,8 +51,8 @@
             <article class="book-card">
               <div class="book-card__art book-card__art--{{ book.cover_style }}">
                 <span class="book-card__number">0{{ forloop.counter }}</span>
-                {% if book.cover %}
-                  <img class="book-cover-image" src="{{ book.cover.url }}" alt="Capa de {{ book.title }}">
+                {% if book.cover_style == "marcia" or book.cover_style == "barcelona" or book.cover %}
+                  {% include "partials/book_cover.html" with book=book image_class="book-cover-image" %}
                 {% else %}
                   <div class="book-cover book-cover--{{ book.cover_style }}" role="img" aria-label="Prévia conceitual, sem capa oficial, de {{ book.title }}">
                     <span class="book-cover__edition">LERTRIX EDIÇÕES</span>

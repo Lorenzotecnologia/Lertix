@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 from django.db import transaction
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.templatetags.static import static
 from django.views.decorators.http import require_GET, require_POST
 
 from .cart import Cart
@@ -60,13 +61,19 @@ def health_check(request):
 
 
 def _book_data(request, book):
+    cover_images = {
+        "marcia": "images/marcia-de-antonio.png",
+        "barcelona": "images/barcelona-e-eu.jpg",
+    }
+    cover_path = cover_images.get(book.cover_style)
+    cover_url = static(cover_path) if cover_path else book.cover.url if book.cover else None
     return {
         "slug": book.slug,
         "title": book.title,
         "author": book.author,
         "description": book.description,
         "price": str(book.price) if book.price is not None else None,
-        "cover": request.build_absolute_uri(book.cover.url) if book.cover else None,
+        "cover": request.build_absolute_uri(cover_url) if cover_url else None,
         "url": request.build_absolute_uri(f"/livros/{book.slug}/"),
         "isbn_13": book.isbn_13,
         "isbn_10": book.isbn_10,

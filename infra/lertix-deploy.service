@@ -1,0 +1,21 @@
+[Unit]
+Description=Run Lertix database migrations and collect static files
+After=postgresql.service
+Requires=postgresql.service
+
+[Service]
+Type=oneshot
+User=lertix
+Group=www-data
+WorkingDirectory=/opt/lertix/app/backend
+EnvironmentFile=/etc/lertix/lertix.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/bin/bash -lc "/opt/lertix/venv/bin/python manage.py migrate --noinput && /opt/lertix/venv/bin/python manage.py collectstatic --noinput"
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+NoNewPrivileges=true
+ReadWritePaths=/opt/lertix/app/backend/staticfiles
+
+[Install]
+WantedBy=multi-user.target

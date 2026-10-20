@@ -67,7 +67,28 @@
     <div class="page-curtain" aria-hidden="true"></div>
 
     <footer class="site-footer">
-      <p>Livros de Antonio Dalama Lorenzo</p>
+      <div class="site-footer__brand">
+        <img
+          class="site-footer__logo"
+          src="{% static 'images/lorenzo-tecnologia.png' %}"
+          alt="Logo Lorenzo Tecnologia, Engenharia e Software"
+        >
+        <p class="site-footer__copyright">Letrix Edições. Copyright ® 2024 Todos os direitos reservados.</p>
+      </div>
+      <a
+        class="instagram-link"
+        href="https://www.instagram.com/lertrixedicoes/"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Acompanhe Lertrix Edições no Instagram (abre em nova aba)"
+      >
+        <svg class="instagram-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.8"/>
+          <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+        </svg>
+        <span>Instagram</span>
+      </a>
       <a
         href="{% url 'storefront' %}#inicio"
         class="back-to-top"

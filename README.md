@@ -78,6 +78,16 @@ estáticos e verifica a aplicação em `/api/health/`. O domínio só ficará at
 depois de adicionar o serviço no painel do Render e apontar o DNS conforme os
 valores que o Render informar.
 
+## Publicação em VPS Linux (Locaweb)
+
+O projeto também inclui arquivos de exemplo para hospedar o Django em uma VPS
+Ubuntu com PostgreSQL, Gunicorn, `systemd` e Nginx. A configuração e o passo a
+passo de DNS, HTTPS, variáveis de ambiente e atualização estão em
+[`docs/locaweb-dominio.md`](docs/locaweb-dominio.md). Os arquivos de serviço e
+Nginx estão em `infra/`; revise os caminhos e o domínio se forem diferentes no
+seu servidor. Esta opção substitui o Render para a aplicação; mantenha os
+registros MX/TXT da Locaweb se o e-mail do domínio continuar lá.
+
 ## Domínio, e-mail Locaweb e funcionalidades
 
 A loja inclui formulário de contato (`/contato/`), carrinho (`/carrinho/`),

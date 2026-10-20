@@ -2,8 +2,13 @@
 {% block content %}
     <main id="conteudo" class="shop-page section-wrap">
       <h1>Finalizar pedido</h1>
-      <ul>
-        {% for line in lines %}<li>{{ line.quantity }}× {{ line.book.title }} — R$ {{ line.subtotal|floatformat:2 }}</li>{% endfor %}
+      <ul class="shop-book-list">
+        {% for line in lines %}
+          <li class="shop-book-list__item">
+            {% include "partials/book_cover.html" with book=line.book image_class="shop-book-list__cover" %}
+            <span>{{ line.quantity }}× {{ line.book.title }} — R$ {{ line.subtotal|floatformat:2 }}</span>
+          </li>
+        {% endfor %}
       </ul>
       <p class="cart-total">Produtos: <strong>R$ {{ total|floatformat:2 }}</strong></p>
       {% if freight %}

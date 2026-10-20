@@ -11,8 +11,8 @@
 
       <section class="book-detail__main">
         <div class="book-detail__art book-card__art--{{ book.cover_style }}">
-          {% if book.cover %}
-            <img class="book-detail__cover" src="{{ book.cover.url }}" alt="Capa de {{ book.title }}">
+          {% if book.cover_style == "marcia" or book.cover_style == "barcelona" or book.cover %}
+            {% include "partials/book_cover.html" with book=book image_class="book-detail__cover" %}
           {% else %}
             <div class="book-cover book-cover--{{ book.cover_style }}" role="img" aria-label="Prévia conceitual, sem capa oficial, de {{ book.title }}">
               <span class="book-cover__edition">LERTRIX EDIÇÕES</span>

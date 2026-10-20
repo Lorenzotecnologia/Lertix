@@ -8,7 +8,12 @@
           <tbody>
             {% for line in lines %}
               <tr>
-                <td><a href="{% url 'book-detail' line.book.slug %}">{{ line.book.title }}</a></td>
+                <td>
+                  <a class="cart-book-link" href="{% url 'book-detail' line.book.slug %}">
+                    {% include "partials/book_cover.html" with book=line.book image_class="cart-book-link__cover" %}
+                    <span>{{ line.book.title }}</span>
+                  </a>
+                </td>
                 <td>R$ {{ line.book.price|floatformat:2 }}</td>
                 <td>
                   <form method="post" action="{% url 'cart-update' line.book.pk %}">

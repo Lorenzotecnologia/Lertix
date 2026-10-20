@@ -3,8 +3,15 @@
     <main id="conteudo" class="shop-page section-wrap">
       <h1>Pedido #{{ order.pk }} recebido</h1>
       <p>Obrigado, {{ order.customer_name }}! Para concluir, pague por Pix.{% if order.shipping_cost is None %} O frete é a combinar: falaremos com você em {{ order.customer_email }} ou pelo WhatsApp.{% endif %}</p>
-      <ul>
-        {% for item in order.items.all %}<li>{{ item }} — R$ {{ item.subtotal|floatformat:2 }}</li>{% endfor %}
+      <ul class="shop-book-list">
+        {% for item in order.items.all %}
+          <li class="shop-book-list__item">
+            {% if item.book %}
+              {% include "partials/book_cover.html" with book=item.book image_class="shop-book-list__cover" %}
+            {% endif %}
+            <span>{{ item }} — R$ {{ item.subtotal|floatformat:2 }}</span>
+          </li>
+        {% endfor %}
       </ul>
       <p class="cart-total">Total: <strong>R$ {{ order.total|floatformat:2 }}</strong></p>
       <section class="pix-box" aria-labelledby="pix-title">

@@ -1,0 +1,25 @@
+[Unit]
+Description=Lertix Django application
+After=network.target postgresql.service
+Requires=postgresql.service
+
+[Service]
+Type=simple
+User=lertix
+Group=www-data
+WorkingDirectory=/opt/lertix/app/backend
+EnvironmentFile=/etc/lertix/lertix.env
+Environment=PYTHONUNBUFFERED=1
+RuntimeDirectory=lertix
+RuntimeDirectoryMode=0750
+ExecStart=/opt/lertix/venv/bin/gunicorn config.wsgi:application --bind unix:/run/lertix/gunicorn.sock --workers 2 --access-logfile - --error-logfile -
+Restart=on-failure
+RestartSec=5
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+NoNewPrivileges=true
+ReadWritePaths=/var/lib/lertix/media
+
+[Install]
+WantedBy=multi-user.target

@@ -189,3 +189,30 @@ SHIPPING_ORIGIN_CEP = os.environ.get("SHIPPING_ORIGIN_CEP", "06455-010")
 _free_min = os.environ.get("FREE_SHIPPING_MIN", "").replace(",", ".")
 FREE_SHIPPING_MIN = Decimal(_free_min) if _free_min else None
 DEFAULT_BOOK_WEIGHT_GRAMS = int(os.environ.get("DEFAULT_BOOK_WEIGHT_GRAMS", "500"))
+
+
+def _optional_positive_int(name):
+    value = os.environ.get(name, "").strip()
+    if not value:
+        return None
+    try:
+        number = int(value)
+    except ValueError as exc:
+        raise ImproperlyConfigured(f"{name} deve ser um número inteiro positivo.") from exc
+    if number <= 0:
+        raise ImproperlyConfigured(f"{name} deve ser um número inteiro positivo.")
+    return number
+
+
+CORREIOS_API_BASE_URL = os.environ.get(
+    "CORREIOS_API_BASE_URL", "https://api.correios.com.br"
+).rstrip("/")
+CORREIOS_API_TIMEOUT = int(os.environ.get("CORREIOS_API_TIMEOUT", "8"))
+CORREIOS_USERNAME = os.environ.get("CORREIOS_USERNAME", "")
+CORREIOS_ACCESS_CODE = os.environ.get("CORREIOS_ACCESS_CODE", "")
+CORREIOS_POSTING_CARD = os.environ.get("CORREIOS_POSTING_CARD", "")
+CORREIOS_PAC_CODE = os.environ.get("CORREIOS_PAC_CODE", "")
+CORREIOS_SEDEX_CODE = os.environ.get("CORREIOS_SEDEX_CODE", "")
+CORREIOS_PACKAGE_LENGTH_CM = _optional_positive_int("CORREIOS_PACKAGE_LENGTH_CM")
+CORREIOS_PACKAGE_WIDTH_CM = _optional_positive_int("CORREIOS_PACKAGE_WIDTH_CM")
+CORREIOS_PACKAGE_HEIGHT_CM = _optional_positive_int("CORREIOS_PACKAGE_HEIGHT_CM")

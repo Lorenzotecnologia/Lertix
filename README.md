@@ -82,7 +82,17 @@ valores que o Render informar.
 
 A loja inclui formulário de contato (`/contato/`), carrinho (`/carrinho/`),
 pedidos sem pagamento online (`/pedido/`, gerenciados no admin) e API JSON do
-catálogo (`/api/livros/`). O frete é calculado por tabela própria (UF do CEP × faixa de peso), editável em Admin → Tarifas de frete; não há frete grátis por padrão (defina `FREE_SHIPPING_MIN` para ativar). O domínio `www.lertrix.com`, o SMTP da Locaweb e a
+catálogo (`/api/livros/`). O frete usa a cotação de preço e prazo dos Correios
+quando a integração está configurada; sem credenciais ou medidas da embalagem,
+usa a tabela interna (UF do CEP × faixa de peso), editável em Admin → Tarifas
+de frete. Configure `CORREIOS_USERNAME`, `CORREIOS_ACCESS_CODE`,
+`CORREIOS_POSTING_CARD`, os códigos contratados em `CORREIOS_PAC_CODE` e
+`CORREIOS_SEDEX_CODE`, e as medidas da embalagem em
+`CORREIOS_PACKAGE_LENGTH_CM`, `CORREIOS_PACKAGE_WIDTH_CM` e
+`CORREIOS_PACKAGE_HEIGHT_CM` como variáveis de ambiente. Não envie credenciais
+no código nem em mensagens. Atualize também o peso de cada livro no admin para
+que a cotação seja precisa. Não há frete grátis por padrão (defina
+`FREE_SHIPPING_MIN` para ativar). O domínio `www.lertrix.com`, o SMTP da Locaweb e a
 migração do site antigo estão descritos em `docs/locaweb-dominio.md`.
 
 ## Estrutura

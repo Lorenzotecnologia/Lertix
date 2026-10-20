@@ -108,6 +108,7 @@ class Order(models.Model):
         "frete (R$)", max_digits=8, decimal_places=2, blank=True, null=True,
         help_text="Vazio = frete a combinar.",
     )
+    shipping_service = models.CharField("serviço de frete", max_length=80, blank=True)
     shipping_days = models.PositiveSmallIntegerField("prazo (dias úteis)", blank=True, null=True)
     total = models.DecimalField(
         "total (R$)", max_digits=10, decimal_places=2, default=0,

@@ -42,10 +42,19 @@
           <p>
             Frete para {{ freight.state }} ({{ freight.region }}):
             {% if freight.free %}<strong>grátis</strong>{% else %}<strong>R$ {{ freight.price|floatformat:2 }}</strong>{% endif %}
-            — prazo estimado de {{ freight.days }} dias úteis.
+            — {{ freight.service }}, prazo estimado de {{ freight.days }} dias úteis.
           </p>
+          {% if freight.fallback %}
+            <p class="errorlist">A cotação dos Correios está indisponível no momento. Este valor é uma estimativa da tabela interna.</p>
+          {% elif freight.source == "table" %}
+            <p>Valor estimado pela tabela interna da loja.</p>
+          {% endif %}
         {% elif cep %}
-          <p>Não temos tabela para este CEP/peso: o frete será combinado com você.</p>
+          {% if correios_enabled %}
+            <p class="errorlist">Não foi possível cotar o frete online. Combinaremos o valor com você.</p>
+          {% else %}
+            <p>Não temos tabela para este CEP/peso: o frete será combinado com você.</p>
+          {% endif %}
         {% endif %}
         <p>Produtos: R$ {{ total|floatformat:2 }}</p>
         <p class="cart-total">Total{% if freight %} com frete{% endif %}: <strong>R$ {{ freight_total|floatformat:2 }}</strong></p>

@@ -37,6 +37,22 @@ services:
         value: contato@lertrix.com
       - key: WHATSAPP_NUMBER
         value: "5511983831766"
+      - key: CORREIOS_USERNAME
+        sync: false
+      - key: CORREIOS_ACCESS_CODE
+        sync: false
+      - key: CORREIOS_POSTING_CARD
+        sync: false
+      - key: CORREIOS_PAC_CODE
+        sync: false
+      - key: CORREIOS_SEDEX_CODE
+        sync: false
+      - key: CORREIOS_PACKAGE_LENGTH_CM
+        sync: false
+      - key: CORREIOS_PACKAGE_WIDTH_CM
+        sync: false
+      - key: CORREIOS_PACKAGE_HEIGHT_CM
+        sync: false
       - key: DATABASE_URL
         fromDatabase:
           name: lertrix-db

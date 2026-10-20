@@ -123,6 +123,7 @@ def cart_detail(request):
             "total": subtotal,
             "cep": cep,
             "freight": freight,
+            "correios_enabled": shipping.correios.is_configured(),
             "freight_total": subtotal + (freight["price"] if freight else 0),
             "cep_invalid": bool(cep) and not shipping.cep_to_state(cep),
             "page_title": "Carrinho — Lertrix Edições",
@@ -181,6 +182,7 @@ def checkout(request):
             if freight:
                 order.shipping_cost = freight["price"]
                 order.shipping_days = freight["days"]
+                order.shipping_service = freight["service"]
             order.total = subtotal + (freight["price"] if freight else 0)
             order.save()
             OrderItem.objects.bulk_create(
@@ -205,6 +207,7 @@ def checkout(request):
             "lines": lines,
             "total": cart.total(),
             "freight": shipping.quote(cep, lines, cart.total()) if cep else None,
+            "correios_enabled": shipping.correios.is_configured(),
             "page_title": "Finalizar pedido — Lertrix Edições",
             "meta_description": "Finalize seu pedido na Lertrix Edições.",
             "current_page": "cart",
@@ -219,7 +222,9 @@ def _notify_order(order):
         f"Telefone: {order.customer_phone}\n"
         f"Entrega: {order.address}, {order.address_number} {order.address_complement} — "
         f"{order.district}, {order.city}/{order.state}, CEP {order.postal_code}\n\n"
-        f"{items}\n\nTotal: R$ {order.total}\nObs.: {order.notes}"
+        f"{items}\n\nFrete: {order.shipping_service or 'a combinar'} — "
+        f"R$ {order.shipping_cost if order.shipping_cost is not None else 'a combinar'}\n"
+        f"Total: R$ {order.total}\nObs.: {order.notes}"
     )
     try:
         send_mail(

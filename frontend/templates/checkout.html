@@ -7,7 +7,10 @@
       </ul>
       <p class="cart-total">Produtos: <strong>R$ {{ total|floatformat:2 }}</strong></p>
       {% if freight %}
-        <p>Frete estimado: {% if freight.free %}<strong>grátis</strong>{% else %}<strong>R$ {{ freight.price|floatformat:2 }}</strong>{% endif %} ({{ freight.days }} dias úteis). O valor final é calculado pelo CEP informado abaixo.</p>
+        <p>Frete estimado — {{ freight.service }}: {% if freight.free %}<strong>grátis</strong>{% else %}<strong>R$ {{ freight.price|floatformat:2 }}</strong>{% endif %} ({{ freight.days }} dias úteis). O valor final é calculado pelo CEP informado abaixo.</p>
+        {% if freight.fallback %}
+          <p class="errorlist">A cotação dos Correios está indisponível no momento; este é um valor estimado pela tabela interna.</p>
+        {% endif %}
       {% else %}
         <p>O frete é calculado pelo CEP informado abaixo; se não for possível, combinaremos com você.</p>
       {% endif %}

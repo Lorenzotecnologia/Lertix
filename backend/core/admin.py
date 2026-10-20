@@ -75,7 +75,15 @@ class OrderItemInline(admin.TabularInline):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ("id", "customer_name", "customer_email", "total", "status", "created_at")
+    list_display = (
+        "id",
+        "customer_name",
+        "customer_email",
+        "shipping_service",
+        "total",
+        "status",
+        "created_at",
+    )
     list_filter = ("status",)
     search_fields = ("customer_name", "customer_email")
     list_editable = ("status",)

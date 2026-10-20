@@ -1,11 +1,15 @@
 """Cálculo de frete por tabela própria: região (UF do CEP) × faixa de peso."""
 
+import logging
 import re
 from decimal import Decimal
 
 from django.conf import settings
 
+from . import correios
 from .models import ShippingRate
+
+logger = logging.getLogger(__name__)
 
 # Faixas de CEP por UF (cada UF pode ter mais de uma faixa).
 CEP_RANGES = [
@@ -52,6 +56,35 @@ def quote(cep, lines, subtotal):
     state = cep_to_state(cep)
     if not state:
         return None
+    free = (
+        settings.FREE_SHIPPING_MIN is not None and subtotal >= settings.FREE_SHIPPING_MIN
+    )
+    try:
+        quotes = correios.quotes(cep, lines)
+    except correios.CorreiosQuoteError:
+        logger.exception("Falha ao consultar cotação de frete dos Correios.")
+        quotes = None
+        correios_failed = True
+    else:
+        correios_failed = False
+
+    if quotes:
+        rate = min(
+            quotes,
+            key=lambda item: (
+                Decimal("0") if free else item["price"],
+                item["days"],
+            ),
+        )
+        return {
+            **rate,
+            "price": Decimal("0") if free else rate["price"],
+            "region": "Correios",
+            "free": free,
+            "state": state,
+            "source": "correios",
+        }
+
     weight = cart_weight(lines)
     rate = next(
         (
@@ -65,13 +98,14 @@ def quote(cep, lines, subtotal):
     )
     if rate is None:
         return None
-    free = (
-        settings.FREE_SHIPPING_MIN is not None and subtotal >= settings.FREE_SHIPPING_MIN
-    )
     return {
         "price": Decimal("0") if free else rate.price,
         "days": rate.delivery_days,
         "region": rate.region,
         "free": free,
         "state": state,
+        "service": "Tabela própria",
+        "service_code": "",
+        "source": "table",
+        "fallback": correios_failed,
     }

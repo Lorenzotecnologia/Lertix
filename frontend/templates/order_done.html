@@ -13,7 +13,7 @@
         {% if order.shipping_cost is None %}
           <p>Valor dos produtos: <strong>R$ {{ order.total|floatformat:2 }}</strong> (sem frete)</p>
         {% else %}
-          <p>Total com frete ({% if order.shipping_cost == 0 %}grátis{% else %}R$ {{ order.shipping_cost|floatformat:2 }}{% endif %}, {{ order.shipping_days }} dias úteis): <strong>R$ {{ order.total|floatformat:2 }}</strong></p>
+          <p>Total com frete — {{ order.shipping_service }} ({% if order.shipping_cost == 0 %}grátis{% else %}R$ {{ order.shipping_cost|floatformat:2 }}{% endif %}, {{ order.shipping_days }} dias úteis): <strong>R$ {{ order.total|floatformat:2 }}</strong></p>
         {% endif %}
         <label for="pix-code">Pix copia e cola</label>
         <textarea id="pix-code" readonly rows="4">{{ pix_code }}</textarea>

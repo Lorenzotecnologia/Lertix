@@ -22,3 +22,4 @@ staticfiles/
 .pytest_cache/
 .coverage
 htmlcov/
+dist/

@@ -56,6 +56,21 @@ o serviço, defina `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false` e
 `DJANGO_ALLOWED_HOSTS` no ambiente de execução. Não versione segredos nem
 arquivos `.env`.
 
+## Site estático para a hospedagem compartilhada Locaweb
+
+A hospedagem compartilhada não roda Django. Para publicar só a vitrine (sem
+carrinho, frete, pedido e Pix), gere o site estático:
+
+```bash
+cd backend && python manage.py build_static_site
+```
+
+A pasta `dist/locaweb/` (ignorada pelo Git) contém HTML, CSS, JS, imagens, um
+`contato.php` (formulário de contato por e-mail) e um `.htaccess`. Envie o
+conteúdo por FTP para a pasta pública do domínio (ex.: `/home/lertrix1/public_html`).
+Antes, ajuste `MAIL_TO` e `MAIL_FROM` em `infra/locaweb-static/contato.php` para
+uma caixa de e-mail do domínio. Gere e envie novamente sempre que o catálogo mudar.
+
 ## Ambiente de staging (Render)
 
 `render.staging.yaml` publica a branch `staging` no plano gratuito do Render

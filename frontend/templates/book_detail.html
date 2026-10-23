@@ -35,11 +35,13 @@
           {% if book.book_format %}
             <p class="book-detail__format">{{ book.book_format }}</p>
           {% endif %}
-          {% if book.price %}
+          {% if book.price and store_enabled %}
             <form method="post" action="{% url 'cart-add' book.slug %}">
               {% csrf_token %}
               <button class="button" type="submit">Adicionar ao carrinho</button>
             </form>
+          {% elif not store_enabled %}
+            <p class="book-detail__availability">Compras online em breve. Fale com a editora pelo contato.</p>
           {% else %}
             <p class="book-detail__availability">Informações de compra em breve.</p>
           {% endif %}

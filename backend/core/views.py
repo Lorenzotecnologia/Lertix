@@ -4,7 +4,9 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.mail import send_mail
 from django.db import transaction
-from django.http import JsonResponse
+from functools import wraps
+
+from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.templatetags.static import static
 from django.views.decorators.http import require_GET, require_POST
@@ -17,6 +19,16 @@ from .forms import CheckoutForm, ContactForm
 from .models import Book, Order, OrderItem
 
 logger = logging.getLogger(__name__)
+
+
+def store_required(view):
+    @wraps(view)
+    def wrapper(request, *args, **kwargs):
+        if not settings.STORE_ENABLED:
+            raise Http404
+        return view(request, *args, **kwargs)
+
+    return wrapper
 
 
 def storefront(request, contact_form=None):
@@ -116,6 +128,7 @@ def contact_submit(request):
     return redirect("/#contato")
 
 
+@store_required
 def cart_detail(request):
     cart = Cart(request)
     lines = cart.lines()
@@ -140,6 +153,7 @@ def cart_detail(request):
     )
 
 
+@store_required
 @require_POST
 def shipping_calc(request):
     cep = shipping.normalize_cep(request.POST.get("cep", ""))
@@ -150,6 +164,7 @@ def shipping_calc(request):
     return redirect("cart")
 
 
+@store_required
 @require_POST
 def cart_add(request, slug):
     book = get_object_or_404(Book, slug=slug, is_published=True, price__isnull=False)
@@ -157,6 +172,7 @@ def cart_add(request, slug):
     return redirect("cart")
 
 
+@store_required
 @require_POST
 def cart_update(request, book_id):
     cart = Cart(request)
@@ -168,12 +184,14 @@ def cart_update(request, book_id):
     return redirect("cart")
 
 
+@store_required
 @require_POST
 def cart_remove(request, book_id):
     Cart(request).remove(book_id)
     return redirect("cart")
 
 
+@store_required
 def checkout(request):
     cart = Cart(request)
     lines = cart.lines()
@@ -244,6 +262,7 @@ def _notify_order(order):
         logger.exception("Falha ao notificar pedido #%s", order.pk)
 
 
+@store_required
 def order_done(request):
     order_id = request.session.get("last_order_id")
     order = Order.objects.filter(pk=order_id).first() if order_id else None

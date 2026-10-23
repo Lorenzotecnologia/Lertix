@@ -9,6 +9,8 @@ services:
     startCommand: python backend/manage.py migrate --noinput && (python backend/manage.py createsuperuser --noinput || true) && gunicorn --chdir backend config.wsgi:application --bind 0.0.0.0:$PORT
     healthCheckPath: /api/health/
     envVars:
+      - key: STORE_ENABLED
+        value: "false"
       - key: DJANGO_DEBUG
         value: "false"
       - key: DJANGO_SECRET_KEY

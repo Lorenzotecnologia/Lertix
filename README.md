@@ -66,10 +66,9 @@ cd backend && python manage.py build_static_site
 ```
 
 A pasta `dist/locaweb/` (ignorada pelo Git) contém HTML, CSS, JS, imagens, um
-`contato.php` (formulário de contato por e-mail) e um `.htaccess`. Envie o
-conteúdo por FTP para a pasta pública do domínio (ex.: `/home/lertrix1/public_html`).
-Antes, ajuste `MAIL_TO` e `MAIL_FROM` em `infra/locaweb-static/contato.php` para
-uma caixa de e-mail do domínio. Gere e envie novamente sempre que o catálogo mudar.
+`.htaccess`. O site estático não tem formulário nem endereço de e-mail; o
+contato é pelo WhatsApp e pelo Instagram. Envie o conteúdo por FTP para a pasta
+pública do domínio (ex.: `/home/lertrix1/public_html`). Gere e envie novamente sempre que o catálogo mudar.
 
 ## Ambiente de staging (Render)
 

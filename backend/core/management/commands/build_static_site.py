@@ -9,8 +9,11 @@ from django.test import Client, override_settings
 
 from core.models import Book
 
-CSRF_INPUT = re.compile(r"\s*<input[^>]*name=[\"']csrfmiddlewaretoken[\"'][^>]*>")
-CONTACT_FORM_ACTION = re.compile(r'(<form[^>]*class="form-card"[^>]*action=")[^"]*(")')
+# Sem e-mail: remove o formulário de contato e o bloco com o endereço de e-mail.
+CONTACT_FORM = re.compile(r'<form class="form-card".*?</form>\s*', re.S)
+EMAIL_BLOCK = re.compile(
+    r'<div>\s*<p class="contact__label">E-mail de contato</p>.*?</div>\s*', re.S
+)
 
 
 class Command(BaseCommand):
@@ -61,8 +64,8 @@ class Command(BaseCommand):
                 if response.status_code != 200:
                     raise CommandError(f"{url} respondeu {response.status_code}")
                 html = response.content.decode()
-                html = CSRF_INPUT.sub("", html)
-                html = CONTACT_FORM_ACTION.sub(r"\1/contato.php\2", html)
+                html = CONTACT_FORM.sub("", html)
+                html = EMAIL_BLOCK.sub("", html)
                 path = out / target
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text(html, encoding="utf-8")

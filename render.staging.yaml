@@ -1,0 +1,42 @@
+# Ambiente de HOMOLOGAÇÃO (staging), plano gratuito, publicado a partir da branch `staging`.
+# Endereço: https://lertrix-staging.onrender.com (o host é liberado via RENDER_EXTERNAL_HOSTNAME).
+# Sem e-mail real (console) e sem cotação dos Correios (usa tarifas locais).
+# Após o go-live na Locaweb: Render > serviço > Settings > Suspend (não apague).
+# Para reativar: Resume + push na branch `staging`. O banco gratuito expira em 30 dias.
+services:
+  - type: web
+    name: lertrix-staging
+    runtime: python
+    plan: free
+    branch: staging
+    autoDeploy: true
+    buildCommand: pip install -r backend/requirements.txt && python backend/manage.py collectstatic --no-input
+    startCommand: python backend/manage.py migrate --noinput && (python backend/manage.py createsuperuser --noinput || true) && gunicorn --chdir backend config.wsgi:application --bind 0.0.0.0:$PORT
+    healthCheckPath: /api/health/
+    envVars:
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false
+      - key: DJANGO_SUPERUSER_EMAIL
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        value: staging@lertrix.com
+      - key: CONTACT_EMAIL_TO
+        value: staging@lertrix.com
+      - key: WHATSAPP_NUMBER
+        value: "5511983831766"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: lertrix-staging-db
+          property: connectionString
+
+databases:
+  - name: lertrix-staging-db
+    databaseName: lertrix_staging
+    user: lertrix
+    plan: free

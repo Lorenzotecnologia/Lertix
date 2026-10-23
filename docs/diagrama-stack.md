@@ -12,6 +12,7 @@ flowchart LR
 
     subgraph hosting["Opções de hospedagem"]
         render["Render<br/>HTTPS + serviço web"]
+        staging["Render Staging (gratuito)<br/>branch staging · desativável"]
         nginx["VPS Linux<br/>Nginx + Certbot + systemd"]
     end
 
@@ -37,6 +38,8 @@ flowchart LR
     end
 
     visitor -->|"HTTPS"| render
+    visitor -.->|"HTTPS · testes"| staging
+    staging -.-> gunicorn
     visitor -->|"HTTPS"| nginx
     render --> gunicorn
     nginx -->|"socket local"| gunicorn
@@ -62,6 +65,10 @@ configuração de produção, um disco persistente para as capas. Na VPS, Nginx
 termina HTTPS e entrega estáticos e mídia; Gunicorn atende o Django por socket
 local e o PostgreSQL roda na própria VPS.
 
+O ambiente de staging (`render.staging.yaml`) publica a branch `staging` no plano
+gratuito do Render para testar funcionalidades novas. Após o go-live na Locaweb
+ele é suspenso (Suspend), sem ser removido, e reativado quando necessário.
+
 O Pix é gerado diretamente pela aplicação; não há intermediador de pagamento.
 O frete consulta os Correios quando configurado e pode recorrer às tarifas
 mantidas no admin.
@@ -73,6 +80,7 @@ flowchart LR
     repo["GitHub<br/>código-fonte"]
     ci["GitHub Actions · CI<br/>Django check · collectstatic · testes"]
     render["Render Blueprint<br/>deploy da aplicação"]
+    staging["Render Staging<br/>render.staging.yaml · branch staging"]
     vps["VPS Linux<br/>Nginx · systemd · PostgreSQL"]
     tag["Tag v*"]
     release["GitHub Actions<br/>validação + pacote Linux"]
@@ -80,6 +88,7 @@ flowchart LR
 
     repo -->|"push / pull request"| ci
     repo -->|"Blueprint do Render"| render
+    repo -.->|"push na branch staging"| staging
     repo -->|"deploy via SSH e systemd"| vps
     repo --> tag
     tag --> release --> artifact

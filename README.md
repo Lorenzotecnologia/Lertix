@@ -56,6 +56,15 @@ o serviço, defina `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=false` e
 `DJANGO_ALLOWED_HOSTS` no ambiente de execução. Não versione segredos nem
 arquivos `.env`.
 
+## Ambiente de staging (Render)
+
+`render.staging.yaml` publica a branch `staging` no plano gratuito do Render
+(`https://lertrix-staging.onrender.com`), com e-mail em console e frete por
+tarifas locais. No Render, crie um Blueprint apontando para a branch `staging`
+e informe o arquivo `render.staging.yaml`. Após o go-live na Locaweb, use
+**Settings → Suspend** no serviço: ele fica desativado, mas disponível para
+novos testes com **Resume**.
+
 ## Publicação no Render
 
 O arquivo `render.yaml` (plano gratuito, para testes; `render.paid.yaml` é a versão de produção) configura o deploy do Django no Render com PostgreSQL,

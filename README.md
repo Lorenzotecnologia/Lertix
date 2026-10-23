@@ -107,6 +107,10 @@ migração do site antigo estão descritos em `docs/locaweb-dominio.md`.
 
 ## Estrutura
 
+Veja o [diagrama atualizado do stack](docs/diagrama-stack.md), com a
+arquitetura da aplicação, as alternativas de hospedagem e o fluxo de CI e
+publicação.
+
 ```text
 .
 ├── .github/workflows/ci.yml

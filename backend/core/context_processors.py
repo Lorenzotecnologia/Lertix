@@ -13,6 +13,7 @@ def whatsapp_url(text):
 
 def cart(request):
     return {
-        "cart_count": Cart(request).count(),
+        "store_enabled": settings.STORE_ENABLED,
+        "cart_count": Cart(request).count() if settings.STORE_ENABLED else 0,
         "whatsapp_url": whatsapp_url("Olá! Vim pelo site da Lertrix Edições."),
     }

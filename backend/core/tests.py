@@ -379,3 +379,26 @@ class ShippingTests(TestCase):
         order = Order.objects.get()
         self.assertIsNone(order.shipping_cost)
         self.assertEqual(order.total, 63)
+
+
+class StoreDisabledTests(TestCase):
+    def setUp(self):
+        self.book = Book.objects.create(
+            title="Livro", slug="livro", author="Autor", price="40.00",
+            is_published=True,
+        )
+
+    def test_commerce_routes_return_404(self):
+        with self.settings(STORE_ENABLED=False):
+            self.assertEqual(self.client.get(reverse("cart")).status_code, 404)
+            self.assertEqual(self.client.get(reverse("checkout")).status_code, 404)
+            response = self.client.post(reverse("cart-add", args=[self.book.slug]))
+            self.assertEqual(response.status_code, 404)
+
+    def test_purchase_buttons_are_hidden(self):
+        with self.settings(STORE_ENABLED=False):
+            home = self.client.get(reverse("storefront"))
+            self.assertNotContains(home, "Carrinho")
+            detail = self.client.get(reverse("book-detail", args=[self.book.slug]))
+            self.assertEqual(detail.status_code, 200)
+            self.assertNotContains(detail, "Adicionar ao carrinho")

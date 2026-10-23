@@ -177,6 +177,12 @@ STORAGES = {
 }
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Vitrine somente informativa: com STORE_ENABLED=false, carrinho, frete, pedido e Pix
+# ficam desativados (404) e os botões de compra são ocultados.
+STORE_ENABLED = os.environ.get("STORE_ENABLED", "true").strip().lower() not in {
+    "0", "false", "no", "off",
+}
+
 # Pix direto (sem intermediador). A chave é a conta que recebe os pagamentos.
 PIX_KEY = os.environ.get("PIX_KEY", "51835078000248")
 PIX_RECEIVER_NAME = os.environ.get(

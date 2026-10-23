@@ -58,9 +58,11 @@
           {% if current_page == "storefront" %}data-page-tab="contato"{% endif %}
         >Contato</a>
       </nav>
+      {% if store_enabled %}
       <a class="header-link" href="{% url 'cart' %}">
         Carrinho{% if cart_count %} ({{ cart_count }}){% endif %}
       </a>
+      {% endif %}
     </header>
 
     {% block content %}{% endblock %}

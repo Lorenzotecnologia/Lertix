@@ -12,6 +12,8 @@ services:
       mountPath: /var/data
       sizeGB: 1
     envVars:
+      - key: STORE_ENABLED
+        value: "false"
       - key: DJANGO_DEBUG
         value: "false"
       - key: DJANGO_SECRET_KEY
